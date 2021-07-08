@@ -4,35 +4,29 @@ from splinter import Browser
 import pandas as pd
 from webdriver_manager.chrome import ChromeDriverManager
 
+def init_browser():
+    # @NOTE: Replace the path with your actual path to the chromedriver
+    executable_path = {"executable_path": "ChromeDriverManager().install()"}
+    return Browser("chrome", **executable_path, headless=False)
 
 def scrape():
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
+    browser = init_browser()
+    mars_dict ={}
+    # Mars News
 
-    #####-MARS NEWS-#####
     url = "https://redplanetscience.com/"
     browser.visit(url)
 
     html = browser.html
     mars_soup = bs(html, "html.parser")
-    
-    title_class = mars_soup.select_one('div.list_text')
 
-    #FIND DIV FOR TITLE OF ARTICLE
-    title_class.find('div', class_='content_title')
+    news_title = mars_soup.find_all('div', class_='content_title')[0].text
+    news_p = mars_soup.find_all('div', class_='article_teaser_body')[0].text
 
-    #SAVE TITLE TEXT WITH VARIABLE
-    title_text = title_class.find('div', class_='content_title').get_text()
-
-    #SAVE ARTICLE PREVIEW TEXT WITH VARIABLE
-    article_text = title_class.find('div', class_='article_teaser_body').get_text()
-    
-    #####-JPL-#####
-    # VISIT URL
+    # JPL IMAGE
     jpl_url = "https://spaceimages-mars.com"
     browser.visit(jpl_url)
-    
-    # FIND IMG TAG
+
     img_tag = browser.find_by_tag("button")[1]
     img_tag.click()
 
@@ -43,17 +37,17 @@ def scrape():
 
     featured_image_url = f'https://spaceimages-mars.com/{rel_url}'
 
-    #####-MARS FACTS-#####
-    facts_df = pd.read_html('https://galaxyfacts-mars.com')[0]
+    # Mars Facts
 
+    facts_df = pd.read_html('https://galaxyfacts-mars.com')[0]
     facts_df.columns=['Description', 'Mars', 'Earth']
     facts_df.set_index('Description', inplace=True)
-    
-    mars_facts = facts_df.to_html()
 
-    #####-HEMISPHERES-#####
+    facts = facts_df.to_html()
+
+    # Hemispheres
+
     url = 'https://marshemispheres.com/'
-
     browser.visit(url)
 
     # CREATE LIST FOR HEMISPHERES
@@ -82,17 +76,18 @@ def scrape():
         
     
         browser.back()
-    
-    mars_dictionary = {
-        "news_title": title_text,
-        "news_paragraph": article_text,
-        "featured_image_url": featured_image_url(browser),
-        "facts": mars_facts(),
-        "hemispheres": hemispheres(browser),
-    }
 
     browser.quit()
 
-    return mars_dictionary
 
+    mars_dict = {
+            "news_title": news_title,
+            "news_p": news_p,
+            "featured_image_url": featured_image_url,
+            "facts": facts,
+            "hemisphere_urls": hemisphere_urls,
+    }
+
+
+    return mars_dict
 
