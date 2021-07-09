@@ -45,7 +45,7 @@
         <!--JPL & FACTS ROW START-->
         <div class="row">
             <!--JPL IMAGE COLUMN START-->
-            <div class="col-md-8">
+            <div class="col-md-8 text-center">
                 <h2>Featured Mars Image</h2>
                 </br>
                 <img src="{{mars.featured_image_url}}" alt="Featured Mars Image">
@@ -53,9 +53,10 @@
             <!--JPL IMAGE COLUMN END-->
 
             <!--MARS FACTS COLUMN START-->
-            <div class="col-md-4">
-                <h2>Mars Facts</h2><br>
-                    {{ mars.facts | safe}}
+            <div class="col-md-4 text-center">
+                <h2>Mars Facts</h2>
+                <br>
+                {{ mars.facts | safe}}
             </div>
             <!--MARS FACTS COLUMN END-->
         </div>
