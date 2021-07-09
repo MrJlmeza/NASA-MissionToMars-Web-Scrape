@@ -45,7 +45,7 @@ def scrape():
     facts_df.set_index('Description', inplace=True)
 
     facts = facts_df.to_html()
-
+    
     # Hemispheres
 
     url = 'https://marshemispheres.com/'
