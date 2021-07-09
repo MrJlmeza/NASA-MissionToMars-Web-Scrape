@@ -1,5 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./Mission_to_Mars/py_files"
-    ]
-}
